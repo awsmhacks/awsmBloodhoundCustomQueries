@@ -1,6 +1,21 @@
 # awsmBloodhoundCustomQueries
+Collection of cyhpers for bloodhound  
+I didnt write most of these, this is a culmination of items gathered from various gists, githubs, and threads in the #cypher-queries bloodhound channel.  I'll try to give props if I can.  
 
-Some customqueries that were removed from the default list, as well as some others, can be found in the customqueries.json file.   
+Reading materials::
+https://github.com/Scoubi/BloodhoundAD-Queries
+https://github.com/porterhau5/BloodHound-Owned
+https://porterhau5.com/blog/extending-bloodhound-track-and-visualize-your-compromise/
+https://blog.cptjesus.com/posts/introtocypher#building-on-top 
+
+TODO:  
+de-dupe entries  
+organize somehow... 
+Move neo4j cipher section to its own doc
+  
+## Custom Queries (Bloodhound UI)
+
+Some customqueries that were removed from the default list, as well as some others, can be found in the *customqueries.json* file.   
 Copy/paste the entire thing into your own customqueries file and hit refresh next to "Custom Queries" to see them show up.    
 
 ### The customqueries file locations by OS (in default setup):   
@@ -9,7 +24,10 @@ Windows : %USERPROFILE%\AppData\Roaming\bloodhound\customqueries.json
 OSX: ~/Library/Application Support/bloodhound/customqueries.json  
 NIX: ~/.config/bloodhound/customqueries.json  
 
+-----------------------------------------------------------------------
 
+## Custom Queries (Neo4j Web Interface) 
+### A.K.A.
 -----------------------------------------------------------------------
                     ######     ##    ##    ########     ##     ##    ########    ########  
                    ##    ##     ##  ##     ##     ##    ##     ##    ##          ##     ## 
@@ -26,10 +44,7 @@ These are mostly for running in the web interface of neo4j. ~ http://localhost:7
 Some need to be modified based on the domain/user/group you are looking for  
 i.e  change "EXAMPLE.COM" or "g.name contains "DOMAIN ADMINS""
   
-TODO:  
-de-dupe entries  
-organize somehow...  
-  
+
 -----------------------------------------------------------------------                                                              
 T.o.C
 
