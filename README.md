@@ -27,6 +27,7 @@ Some need to be modified based on the domain/user/group you are looking for
 i.e  change "EXAMPLE.COM" or "g.name contains "DOMAIN ADMINS""
 
 -----------------------------------------------------------------------                                                              
+T.o.C
 
 1. [Get a count of computers that do not have admins](#get-a-count-of-computers-that-do-not-have-admins)  
 2. [Get the names of computers without admins, sorted in alphabetical order](#get-the-names-of-computers-without-admins,-sorted-in-alphabetical-order)  
@@ -61,6 +62,38 @@ i.e  change "EXAMPLE.COM" or "g.name contains "DOMAIN ADMINS""
 31. [Find every instance of a computer account having local admin rights on other computers. Return in descending order of the number of computers the computer account has local ](#find-every-instance-of-a-computer-account-having-local-admin-rights-on-other-computers.-return-in-descending-order-of-the-number-of-computers-the-computer-account-has-local-)  
 32. [Find users who are not marked as "Sensitive and Cannot Be Delegated" that have Administrative access to a computer, and where those users have sessions on servers with ](#find-users-who-are-not-marked-as-"sensitive-and-cannot-be-delegated"-that-have-administrative-access-to-a-computer,-and-where-those-users-have-sessions-on-servers-with-)  
 33. [Gather the computers where the user is AdminTo and the computers with unconstrained delegation in lists (for better presentation and structure)](#gather-the-computers-where-the-user-is-adminto-and-the-computers-with-unconstrained-delegation-in-lists-for-better-presentation-and-structure)  
+34. [DOMAIN USERS is Admin of Computer](#domain-users-is-admin-of-computer)  
+35. [Find Shortest Path from DOMAIN USERS to High Value Targets](#find-shortest-path-from-domain-users-to-high-value-targets)  
+36. [Find ALL Path from DOMAIN USERS to High Value Targets](#find-all-path-from-domain-users-to-high-value-targets)  
+37. [Find all other right Domain Users shouldn’t have](#find-all-other-right-domain-users-shouldn’t-have)  
+38. [Kerberoastable Accounts](#kerberoastable-accounts)  
+39. [Kerberoastable Accounts member of High Value Group](#kerberoastable-accounts-member-of-high-value-group)  
+40. [Find WORKSTATIONS where Domain Users can RDP To](#find-workstations-where-domain-users-can-rdp-to)  
+41. [Find SERVERS where Domain Users can RDP To](#find-servers-where-domain-users-can-rdp-to)  
+42. [Top 10 Computers with Most Admins](#top-10-computers-with-most-admins)  
+43. [How many High Value Target a Node can reach](#how-many-high-value-target-a-node-can-reach)  
+44. [All DA Account Sessions](#all-da-account-sessions)  
+45. [DA Sessions to NON DC](#da-sessions-to-non-dc)  
+46. [Count on how many non DC machines DA have sessions](#count-on-how-many-non-dc-machines-da-have-sessions)  
+47. [EXCLUDE PATH (Edge) on the fly](#exclude-path-(edge)-on-the-fly)  
+48. [Set SPN to a User](#set-spn-to-a-user)  
+49. [Add DOMAIN USERS as Admin to COMPxxxx](#add-domain-users-as-admin-to-compxxxx)  
+50. [Test our New Relationship](#test-our-new-relationship)  
+51. [Delete a Relationship](#delete-a-relationship)  
+52. [Shortest Path from Domain Users to Domain Admins](#shortest-path-from-domain-users-to-domain-admins)  
+53. [Shortest Path from Domain Users to Domain Admins (No AdminTo)](#shortest-path-from-domain-users-to-domain-admins-(no-adminto))  
+54. [Find Admin Group not tagged highvalue](#find-admin-group-not-tagged-highvalue)  
+55. [Set Admin Group as highvalue](#set-admin-group-as-highvalue)  
+56. [Remore Admin User highvalue](#remore-admin-user-highvalue)  
+57. [If you want to enumerate all available properties](#if-you-want-to-enumerate-all-available-properties)  
+58. [List all computers with unconstraineddelegation](#list-all-computers-with-unconstraineddelegation)  
+59. [Computer where the most users can RDP to ](#computer-where-the-most-users-can-rdp-to)  
+60. [Average Length of Path](#average-length-of-path)  
+61. [Count how many Users have a path to DA](#count-how-many-users-have-a-path-to-da)  
+62. [Percent of Users that have a path to DA](#percent-of-users-that-have-a-path-to-da)  
+63. [Return users with shortest paths to high value targets by name](#return-users-with-shortest-paths-to-high-value-targets-by-name)  
+
+-----------------------------------------------------------------------
 
 
 ### Get a count of computers that do not have admins
@@ -367,4 +400,228 @@ WITH u,c1
 MATCH (c2:Computer {unconstraineddelegation:true})-[:HasSession]->(u)
 RETURN u.name AS user,COLLECT(DISTINCT(c1.name)) AS AdminTo,COLLECT(DISTINCT(c2.name)) AS TicketLocation
 ORDER BY user ASC
+```
+
+### DOMAIN USERS is Admin of Computer 
+```
+MATCH p=(m:Group)-[r:AdminTo]->(n:Computer) WHERE m.name STARTS WITH 'DOMAIN USERS' RETURN p
+```
+
+### Find Shortest Path from DOMAIN USERS to High Value Targets
+```
+MATCH (g:Group),(n {highvalue:true}),p=shortestPath((g)-[*1..]->(n)) 
+WHERE g.name STARTS WITH 'DOMAIN USERS' 
+RETURN p
+```
+
+### Find ALL Path from DOMAIN USERS to High Value Targets
+```
+MATCH (g:Group) WHERE g.name STARTS WITH 'DOMAIN USERS'  MATCH (n {highvalue:true}),p=shortestPath((g)-[r*1..]->(n)) return p
+```
+
+### Find all other right Domain Users shouldn’t have
+```
+MATCH p=(m:Group)-[r:Owns|:WriteDacl|:GenericAll|:WriteOwner|:ExecuteDCOM|:GenericWrite|:AllowedToDelegate|:ForceChangePassword]->(n:Computer) WHERE m.name STARTS WITH 'DOMAIN USERS' RETURN p
+```
+
+### Kerberoastable Accounts
+```
+MATCH (n:User)WHERE n.hasspn=true RETURN n
+```
+
+### Kerberoastable Accounts member of High Value Group
+```
+MATCH (n:User)-[r:MemberOf]->(g:Group) WHERE g.highvalue=true AND n.hasspn=true RETURN n, g, r
+```
+
+### Find WORKSTATIONS where Domain Users can RDP To
+```
+match p=(g:Group)-[:CanRDP]->(c:Computer) 
+where g.name STARTS WITH 'DOMAIN USERS' AND NOT c.operatingsystem CONTAINS 'Server' 
+return p
+```
+
+### Find SERVERS where Domain Users can RDP To
+```
+match p=(g:Group)-[:CanRDP]->(c:Computer) 
+where g.name STARTS WITH 'DOMAIN USERS' 
+AND c.operatingsystem CONTAINS 'Server' 
+return p
+```
+
+### Top 10 Computers with Most Admins
+```
+MATCH (n:User),(m:Computer), (n)-[r:AdminTo]->(m) WHERE NOT n.name STARTS WITH 'ANONYMOUS LOGON' AND NOT n.name='' WITH m, count(r) as rel_count order by rel_count desc LIMIT 10 MATCH p=(m)<-[r:AdminTo]-(n) RETURN p
+```
+
+
+### How many High Value Target a Node can reach
+```
+MATCH p = shortestPath((n)-[*1..]->(m {highvalue:true}))
+WHERE NOT n = m
+RETURN DISTINCT(m.name),LABELS(m)[0],COUNT(DISTINCT(n))
+ORDER BY COUNT(DISTINCT(n)) DESC
+```
+ 
+### All DA Account Sessions
+```
+MATCH (n:User)-[:MemberOf]->(g:Group {name:"DOMAIN ADMINS@TESTLAB.LOCAL"}) 
+MATCH p = (c:Computer)-[:HasSession]->(n) 
+return p
+```
+
+### DA Sessions to NON DC
+```
+OPTIONAL MATCH (c:Computer)-[:MemberOf]->(t:Group) 
+WHERE NOT t.name = "DOMAIN CONTROLLERS@TESTLAB.LOCAL"
+WITH c as NonDC
+MATCH p=(NonDC)-[:HasSession]->(n:User)-[:MemberOf]->
+(g:Group {name:"DOMAIN ADMINS@TESTLAB.LOCAL"})
+RETURN DISTINCT (n.name) as Username, COUNT(DISTINCT(NonDC)) as Connexions
+ORDER BY COUNT(DISTINCT(NonDC)) DESC
+```
+
+### Count on how many non DC machines DA have sessions
+```
+MATCH (c:Computer)-[:MemberOf*1..]->(g:Group)
+WHERE g.objectsid ENDS WITH "-516"
+WITH c.name as DomainControllers
+MATCH p = (c2:Computer)-[:HasSession]->(u:User)-[:MemberOf*1..]->(g:Group)
+WHERE g.objectsid ENDS WITH "-512" AND NOT c2.name in DomainControllers
+RETURN DISTINCT(u.name),COUNT(DISTINCT(c2))
+ORDER BY COUNT(DISTINCT(c2)) DESC
+```
+
+### EXCLUDE PATH (Edge) on the fly
+```
+MATCH (n:User),(m:Group {name:"DOMAIN ADMINS@TESTLAB.LOCAL"}),
+p=shortestPath((n)-[r*1..]->(m)) 
+WHERE ALL(x in relationships(p) WHERE type(x) <> "AdminTo") 
+RETURN p
+```
+
+
+### Set SPN to a User
+```
+MATCH (n:User {name:"JNOA00093@TESTLAB.LOCAL"}) SET n.hasspn=true
+```
+
+
+### Add DOMAIN USERS as Admin to COMPxxxx
+```
+MERGE (n:Group {name:"DOMAIN USERS@TESTLAB.LOCAL"}) WITH n MERGE (m:Computer {name:"COMP00673.TESTLAB.LOCAL"}) WITH n,m MERGE (n)-[:AdminTo]->(m)
+```
+
+### Test our New Relationship 
+```
+MATCH p=(n:Group {name:"DOMAIN USERS@TESTLAB.LOCAL"})-[r:AdminTo]->(m:Computer {name:"COMP00673.TESTLAB.LOCAL"}) 
+RETURN p
+```
+#### Might try to replace AdminTo by 1**
+
+### Delete a Relationship
+```
+MATCH p=(n:Group {name:"DOMAIN USERS@TESTLAB.LOCAL"})-[r:AdminTo]->
+(m:Computer {name:"COMP00673.TESTLAB.LOCAL"}) 
+DELETE r
+```
+
+
+### Shortest Path from Domain Users to Domain Admins
+```
+MATCH (g:Group {name:"DOMAIN USERS@TESTLAB.LOCAL"}),
+(n {name:"DOMAIN ADMINS@TESTLAB.LOCAL"}),
+p=shortestPath((g)-[r*1..]->(n)) 
+return p
+```
+
+
+### Shortest Path from Domain Users to Domain Admins (No AdminTo)
+```
+MATCH (g:Group {name:"DOMAIN USERS@TESTLAB.LOCAL"}),
+(n {name:"DOMAIN ADMINS@TESTLAB.LOCAL"}),
+p=shortestPath((g)-[r*1..]->(n)) 
+WHERE ALL(x in relationships(p) WHERE type(x) <> "AdminTo") 
+return p
+```
+
+
+### Find Admin Group not tagged highvalue
+```
+MATCH (g:Group)
+WHERE g.name CONTAINS "ADMIN"
+AND g.highvalue IS null
+RETURN g.name
+```
+
+### Set Admin Group as highvalue
+```
+MATCH (g:Group)
+WHERE g.name CONTAINS "ADMIN"
+AND g.highvalue IS null
+SET g.highvalue=true
+```
+
+### Remore Admin User highvalue
+```
+MATCH p=(g:Group {highvalue: true})<-[:MemberOf]-(u:User)
+WHERE g.name CONTAINS "ADMIN"
+SET g.highvalue = NULL
+```
+
+### If you want to enumerate all available properties
+``` 
+Match (n:Computer) return properties(n)
+```
+
+### List all computers with unconstraineddelegation
+```
+MATCH (c:Computer {unconstraineddelegation:true})
+return c.name
+```
+
+### Computer where the most users can RDP to 
+```
+MATCH (c:Computer)
+OPTIONAL MATCH (u1:User)-[:CanRDP]->(c)
+OPTIONAL MATCH (u2:User)-[:MemberOf*1..]->(:Group)-[:CanRDP]->(c)
+WITH COLLECT(u1) + COLLECT(u2) as tempVar,c
+UNWIND tempVar as users
+RETURN c.name,COUNT(DISTINCT(users))
+ORDER BY COUNT(DISTINCT(users)) DESC
+```
+
+### Average Length of Path
+```
+MATCH (g:Group {name:'DOMAIN ADMINS@CONTOSO.LOCAL'})
+MATCH p = shortestPath((u:User)-[r:AdminTo|MemberOf|HasSession*1..]->(g))
+WITH EXTRACT(n in NODES(p) | LABELS(n)[0]) as pathNodes
+WITH FILTER(x IN pathNodes WHERE x = "Computer") as filteredPathNodes
+RETURN AVG(LENGTH(filteredPathNodes))
+```
+
+### Count how many Users have a path to DA
+```
+MATCH p=shortestPath((u:User)-[*1..]->
+(m:Group {name: "DOMAIN ADMINS@TESTLAB.LOCAL"}))
+RETURN COUNT (DISTINCT(u))
+```
+
+### Percent of Users that have a path to DA
+```
+OPTIONAL MATCH p=shortestPath((u:User)-[*1..]->
+(m:Group {name: "DOMAIN ADMINS@TESTLAB.LOCAL"}))
+OPTIONAL MATCH (uT:User)
+WITH COUNT (DISTINCT(uT)) as uTotal, COUNT (DISTINCT(u)) as uHasPath
+RETURN uHasPath / uTotal * 100 as Percent
+```
+
+
+### Return users with shortest paths to high value targets by name
+```
+MATCH (u:User)
+MATCH (g:Group {highvalue: True})
+MATCH p = shortestPath((u:User)-[r:AddMember|AdminTo|AllExtendedRights|AllowedToDelegate|CanRDP|Contains|ExecuteDCOM|ForceChangePassword|GenericAll|GenericWrite|GetChangesAll|GpLink|HasSession|MemberOf|Owns|ReadLAPSPassword|TrustedBy|WriteDacl|WriteOwner*1..]->(g))
+RETURN DISTINCT(u.name),u.enabled
+order by u.name
 ```
