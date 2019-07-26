@@ -100,6 +100,17 @@
             ]
         },
         {
+            "name": "DA Account Sessions to NON DC",
+            "queryList": [
+                {
+                    "final": true,
+                    "query":
+                        "MATCH (c:Computer)-[:MemberOf]->(t:Group) WHERE NOT t.name = 'DOMAIN CONTROLLERS@TESTLAB.LOCAL' WITH c as NonDC MATCH p=(NonDC)-[:HasSession]->(n:User)-[:MemberOf]-> (g:Group {name:'DOMAIN ADMINS@TESTLAB.LOCAL'}) RETURN p",
+                    "allowCollapse": true
+                }
+            ]
+        },
+        {
             "name": "Kerberoastable Accounts member of High Value Group",
             "queryList": [
                 {
