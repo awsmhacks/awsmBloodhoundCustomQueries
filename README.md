@@ -25,7 +25,11 @@ NIX: ~/.config/bloodhound/customqueries.json
 These are mostly for running in the web interface of neo4j. ~ http://localhost:7474  
 Some need to be modified based on the domain/user/group you are looking for  
 i.e  change "EXAMPLE.COM" or "g.name contains "DOMAIN ADMINS""
-
+  
+TODO:  
+de-dupe entries  
+organize somehow...  
+  
 -----------------------------------------------------------------------                                                              
 T.o.C
 
