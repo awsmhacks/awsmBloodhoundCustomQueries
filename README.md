@@ -1,5 +1,4 @@
-# awsmBloodhoundCustomQueries
-Collection of cyhpers for bloodhound  
+# awsmBloodhoundCustomQueries   
 I didnt write most of these, this is a culmination of items gathered from various gists, githubs, and threads in the #cypher-queries bloodhound channel.  I'll try to give props if I can.    
 
 There are 2 ways to view bloodhound results.   
