@@ -124,6 +124,7 @@ T.o.C
 61. [Count how many Users have a path to DA](#count-how-many-users-have-a-path-to-da)  
 62. [Percent of Users that have a path to DA](#percent-of-users-that-have-a-path-to-da)  
 63. [Return users with shortest paths to high value targets by name](#return-users-with-shortest-paths-to-high-value-targets-by-name)  
+64. [Return labels i.e. group/name for a given SID](#return-labels-i.e.-group/name-for-a-given-sid)
 
 -----------------------------------------------------------------------
 
@@ -656,4 +657,8 @@ MATCH (g:Group {highvalue: True})
 MATCH p = shortestPath((u:User)-[r:AddMember|AdminTo|AllExtendedRights|AllowedToDelegate|CanRDP|Contains|ExecuteDCOM|ForceChangePassword|GenericAll|GenericWrite|GetChangesAll|GpLink|HasSession|MemberOf|Owns|ReadLAPSPassword|TrustedBy|WriteDacl|WriteOwner*1..]->(g))
 RETURN DISTINCT(u.name),u.enabled
 order by u.name
+```
+### Return labels i.e. group/name for a given SID
+```
+MATCH (n {objectsid:"S-1-5-21-971234526-3761234589-3049876599-500"}) RETURN labels(n)
 ```
