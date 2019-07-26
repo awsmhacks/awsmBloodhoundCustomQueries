@@ -5,11 +5,13 @@ I didnt write most of these, this is a culmination of items gathered from variou
 There are 2 ways to view bloodhound results.   
 1-In the UI with the sweet graphing and attack path views  
 2-Using the neo4j interface directly. These return results in tables, akin to a SQL Database look. 
-
+  
 The customqueries.json file is used to store queries in the Bloodhound UI so you can easily reuse them.  
 ----Generally these are queries that return paths  
+   
 The CYPHER section is queries you would put into the neo4j interface and get results in tables.   
-----Generaly these queries are used when you want to return lists or get percentages for report things  
+----Generally these queries are used when you want to return lists or get percentages for report things  
+  
   
 Reading materials / References::  
 https://github.com/BloodHoundAD/BloodHound/wiki  
