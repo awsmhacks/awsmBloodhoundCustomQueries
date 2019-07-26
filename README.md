@@ -12,6 +12,7 @@ The CYPHER section is queries you would put into the neo4j interface and get res
 ----Generaly these queries are used when you want to return lists or get percentages for report things  
   
 Reading materials / References::  
+https://github.com/BloodHoundAD/BloodHound/wiki  
 https://github.com/Scoubi/BloodhoundAD-Queries  
 https://github.com/porterhau5/BloodHound-Owned  
 https://porterhau5.com/blog/extending-bloodhound-track-and-visualize-your-compromise/  
