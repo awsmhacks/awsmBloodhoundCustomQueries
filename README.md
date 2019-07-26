@@ -1,8 +1,17 @@
 # awsmBloodhoundCustomQueries
 Collection of cyhpers for bloodhound  
 I didnt write most of these, this is a culmination of items gathered from various gists, githubs, and threads in the #cypher-queries bloodhound channel.  I'll try to give props if I can.    
+
+There are 2 ways to view bloodhound results.   
+1-In the UI with the sweet graphing and attack path views  
+2-Using the neo4j interface directly. These return results in tables, akin to a SQL Database look. 
+
+The customqueries.json file is used to store queries in the Bloodhound UI so you can easily reuse them.  
+----Generally these are queries that return paths  
+The CYPHER section is queries you would put into the neo4j interface and get results in tables.   
+----Generaly these queries are used when you want to return lists or get percentages for report things  
   
-Reading materials::  
+Reading materials / References::  
 https://github.com/Scoubi/BloodhoundAD-Queries  
 https://github.com/porterhau5/BloodHound-Owned  
 https://porterhau5.com/blog/extending-bloodhound-track-and-visualize-your-compromise/  
