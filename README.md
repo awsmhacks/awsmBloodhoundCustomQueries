@@ -1,13 +1,13 @@
 # awsmBloodhoundCustomQueries
 Collection of cyhpers for bloodhound  
-I didnt write most of these, this is a culmination of items gathered from various gists, githubs, and threads in the #cypher-queries bloodhound channel.  I'll try to give props if I can.  
-
-Reading materials::
-https://github.com/Scoubi/BloodhoundAD-Queries
-https://github.com/porterhau5/BloodHound-Owned
-https://porterhau5.com/blog/extending-bloodhound-track-and-visualize-your-compromise/
-https://blog.cptjesus.com/posts/introtocypher#building-on-top 
-
+I didnt write most of these, this is a culmination of items gathered from various gists, githubs, and threads in the #cypher-queries bloodhound channel.  I'll try to give props if I can.    
+  
+Reading materials::  
+https://github.com/Scoubi/BloodhoundAD-Queries  
+https://github.com/porterhau5/BloodHound-Owned  
+https://porterhau5.com/blog/extending-bloodhound-track-and-visualize-your-compromise/  
+https://blog.cptjesus.com/posts/introtocypher#building-on-top   
+  
 TODO:  
 de-dupe entries  
 organize somehow... 
