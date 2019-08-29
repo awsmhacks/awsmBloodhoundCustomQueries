@@ -661,3 +661,15 @@ order by u.name
 ```
 MATCH (n {objectsid:"S-1-5-21-971234526-3761234589-3049876599-500"}) RETURN labels(n)
 ```
+
+
+### Return top 10 users with most Derivative local admin rights
+```
+MATCH (u:User)
+OPTIONAL MATCH (u)-[:AdminTo]->(c1:Computer)
+OPTIONAL MATCH (u)-[:MemberOf*1..]->(:Group)-[:AdminTo]->(c2:Computer)
+WITH COLLECT(c1) + COLLECT(c2) as tempVar,u
+UNWIND tempVar AS computers
+RETURN u.name,COUNT(DISTINCT(computers)) AS is_admin_on_this_many_boxes
+ORDER BY is_admin_on_this_many_boxes DESC
+```
