@@ -2,19 +2,6 @@
     "queries": 
     [
         {
-            "name": "Find Shortest Paths to Domain Admins",
-            "requireNodeSelect": true,
-            "nodeSelectQuery":  {
-                "query":"MATCH (n:Group) WHERE n.name =~ {name} RETURN n.name",
-                "queryProps": {"name":"(?i).*DOMAIN ADMINS.*"},
-                "onFinish": "MATCH (n:User),(m:Group {name:{result}}),p=shortestPath((n)-[*1..]->(m)) RETURN p",
-                "start":"",
-                "end": "{}",
-                "allowCollapse": true,
-                "boxTitle": "Select domain to map..."
-            }
-        },
-        {
             "name": "Shortest Paths to High Value Targets from Owned Principles",
             "queryList": [
                 {
@@ -37,7 +24,7 @@
                {
                    "final": true,
                    "query":
-                       "MATCH p=(m:Group)-[r:AdminTo]->(n:Computer) WHERE m.name STARTS WITH ‘DOMAIN USERS’ RETURN p",
+                       "MATCH p=(m:Group)-[r:AdminTo]->(n:Computer) WHERE m.name STARTS WITH 'DOMAIN USERS' RETURN p",
                    "allowCollapse": true
                 }
             ]
@@ -48,7 +35,7 @@
                {
                    "final": true,
                    "query":
-                       "match p=(g:Group)-[:CanRDP]->(c:Computer) where g.name STARTS WITH ‘DOMAIN USERS’ AND NOT c.operatingsystem CONTAINS ‘Server’ return p",
+                       "match p=(g:Group)-[:CanRDP]->(c:Computer) where g.name STARTS WITH 'DOMAIN USERS' AND NOT c.operatingsystem CONTAINS 'Server' return p",
                    "allowCollapse": true
                 }
             ]
@@ -59,19 +46,8 @@
                {
                    "final": true,
                    "query":
-                       "match p=(g:Group)-[:CanRDP]->(c:Computer) where g.name STARTS WITH ‘DOMAIN USERS’ AND c.operatingsystem CONTAINS ‘Server’ return p",
+                       "match p=(g:Group)-[:CanRDP]->(c:Computer) where g.name STARTS WITH 'DOMAIN USERS' AND c.operatingsystem CONTAINS 'Server' return p",
                    "allowCollapse": true
-                }
-            ]
-        },
-        {
-            "name": "Shortest Path from DOMAIN USERS to High Value Targets",
-            "queryList": [
-                {
-                    "final": true,
-                    "query":
-                        "MATCH (g:Group),(n {highvalue:true}),p=shortestPath((g)-[r*1..]->(n)) WHERE g.name STARTS WITH 'DOMAIN USERS' return p",
-                    "allowCollapse": true
                 }
             ]
         },
@@ -98,12 +74,23 @@
             ]
         },
         {
+            "name": "DA Account Sessions",
+            "queryList": [
+                {
+                    "final": true,
+                    "query":
+                        "MATCH (n:User)-[:MemberOf]->(g:Group) WHERE g.name STARTS WITH 'DOMAIN ADMINS' MATCH p = (c:Computer)-[:HasSession]->(n) return p",
+                    "allowCollapse": true
+                }
+            ]
+        },
+        {
             "name": "DA Account Sessions to NON DC",
             "queryList": [
                 {
                     "final": true,
                     "query":
-                        "MATCH (c:Computer)-[:MemberOf]->(t:Group) WHERE NOT t.name = 'DOMAIN CONTROLLERS@TESTLAB.LOCAL' WITH c as NonDC MATCH p=(NonDC)-[:HasSession]->(n:User)-[:MemberOf]-> (g:Group {name:'DOMAIN ADMINS@TESTLAB.LOCAL'}) RETURN p",
+                        "MATCH (c:Computer)-[:MemberOf]->(t:Group) WHERE NOT t.name STARTS WITH 'DOMAIN CONTROLLERS' WITH c as NonDC MATCH p=(NonDC)-[:HasSession]->(n:User)-[:MemberOf]-> (g:Group WHERE g.name STARTS WITH 'DOMAIN ADMINS') RETURN p",
                     "allowCollapse": true
                 }
             ]
