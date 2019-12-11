@@ -1,5 +1,5 @@
 
-This repo contains a customqueries.json file with several examples you can use and/or modify.  
+This repo contains a [customqueries.json](https://raw.githubusercontent.com/awsmhacks/awsmBloodhoundCustomQueries/master/customqueries.json) file with several examples you can use and/or modify.  
 Further down in the [Cypher](#cypher-queries-neo4j-web-interface)  section I have several queries that can be used in the neo4j interface.  
 
 I didnt write most of these, this is a culmination of items gathered from various gists, githubs, and threads in the #cypher-queries bloodhound channel.    
