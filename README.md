@@ -1,5 +1,5 @@
 # awsmBloodhoundCustomQueries   
-I didnt write most of these, this is a culmination of items gathered from various gists, githubs, and threads in the #cypher-queries bloodhound channel.  I'll try to give props if I can.    
+I didnt write most of these, this is a culmination of items gathered from various gists, githubs, and threads in the #cypher-queries bloodhound channel.    
 
 There are 2 ways to view bloodhound results.   
 1-In the UI with the sweet graphing and attack path views  
@@ -11,18 +11,6 @@ The customqueries.json file is used to store queries in the Bloodhound UI so you
 The CYPHER section is queries you would put into the neo4j interface and get results in tables.   
 ----Generally these queries are used when you want to return lists or get percentages for report things  
   
-  
-Reading materials / References::  
-https://github.com/BloodHoundAD/BloodHound/wiki  
-https://github.com/Scoubi/BloodhoundAD-Queries  
-https://github.com/porterhau5/BloodHound-Owned  
-https://porterhau5.com/blog/extending-bloodhound-track-and-visualize-your-compromise/  
-https://blog.cptjesus.com/posts/introtocypher#building-on-top   
-  
-TODO:  
-de-dupe entries  
-organize somehow... 
-Move neo4j cipher section to its own doc
   
 ## Custom Queries (Bloodhound UI)
 
@@ -125,6 +113,7 @@ T.o.C
 63. [Return users with shortest paths to high value targets by name](#return-users-with-shortest-paths-to-high-value-targets-by-name)  
 64. [Return labels i.e. group/name for a given SID](#return-labels-i.e.-group,username-for-a-given-sid)
 65. [Return top 10 users with most Derivative local admin rights](#return-top-10-users-with-most-derivative-local-admin-rights)
+66. [Find all users WITHOUT a path to DA](#find-all-users-without-a-path-to-da)
 -----------------------------------------------------------------------
 
 
@@ -673,3 +662,20 @@ UNWIND tempVar AS computers
 RETURN u.name,COUNT(DISTINCT(computers)) AS is_admin_on_this_many_boxes
 ORDER BY is_admin_on_this_many_boxes DESC
 ```
+
+
+### Find all users WITHOUT a path to da  
+```
+MATCH (n:User),(m:Group {name:"DOMAIN ADMINS@CONTOSO.LOCAL"}) WHERE NOT EXISTS ((n)-[*]->(m)) RETURN n.name  
+```
+
+
+  
+## References
+Reading materials / References::  
+https://github.com/BloodHoundAD/BloodHound/wiki  
+https://github.com/Scoubi/BloodhoundAD-Queries  
+https://github.com/porterhau5/BloodHound-Owned  
+https://porterhau5.com/blog/extending-bloodhound-track-and-visualize-your-compromise/  
+https://blog.cptjesus.com/posts/introtocypher#building-on-top   
+  
