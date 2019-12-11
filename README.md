@@ -113,6 +113,7 @@ T.o.C
 64. [Return labels i.e. group/name for a given SID](#64-return-labels-ie-groupusername-for-a-given-sid)
 65. [Return top 10 users with most Derivative local admin rights](#65-return-top-10-users-with-most-derivative-local-admin-rights)
 66. [Find all users WITHOUT a path to DA](#66-find-all-users-without-a-path-to-da)
+67. [Find users that have never logged on AND their account is still active](#67-find-users-that-have-never-logged-on-and-their-account-is-still-active)
   
 -----------------------------------------------------------------------
 
@@ -667,8 +668,13 @@ ORDER BY is_admin_on_this_many_boxes DESC
 ```
 MATCH (n:User),(m:Group {name:"DOMAIN ADMINS@CONTOSO.LOCAL"}) WHERE NOT EXISTS ((n)-[*]->(m)) RETURN n.name  
 ```
-
-
+  
+  
+### 67. Find users that have never logged on AND their account is still active  
+```
+MATCH (n:User) WHERE n.lastlogontimestamp=-1.0 AND n.enabled=TRUE RETURN n.name ORDER BY n.name  
+```
+  
   
 ## References
 Reading materials / References::  
