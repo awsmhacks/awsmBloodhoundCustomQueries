@@ -1,23 +1,17 @@
 
 This repo contains a customqueries.json file with several examples you can use and/or modify.  
-Further down in the Cypher section I have several queries that can be used in the neo4j interface.  
+Further down in the [Cypher](#cypher-queries-neo4j-web-interface)  section I have several queries that can be used in the neo4j interface.  
 
 I didnt write most of these, this is a culmination of items gathered from various gists, githubs, and threads in the #cypher-queries bloodhound channel.    
  
-  
-## Usage
-There are 2 ways to view bloodhound results.   
-1 In the UI with the sweet graphing and attack path views 
-2 Using the neo4j interface directly. These return results in tables, akin to a SQL Database look. 
-  
-
 ## Custom Queries (Bloodhound UI)  
 
 Bloodhound's UI allows you to create 'custom queries' to make repeating often used queries easy.  
 These are stored in a customqueries.json file.  
--     Generally these are queries that return paths  
+- Generally these are queries that return paths  
 
-Some queries that were removed from the default list, as well as other useful queries, can be found in the *customqueries.json* file.     
+Some queries that were removed from the default list, as well as other useful queries, can be found in the [customqueries.json](https://raw.githubusercontent.com/awsmhacks/awsmBloodhoundCustomQueries/master/customqueries.json) file.   
+  
 Copy/paste the entire thing into your own customqueries file and hit refresh next to "Custom Queries" to see them show up in the bloodhound UI.    
 
 #### The customqueries file locations by OS (in default setup):   
@@ -31,7 +25,7 @@ NIX: ~/.config/bloodhound/customqueries.json
 ## Cypher Queries (Neo4j Web Interface) 
   
 The CYPHER section are queries you would put into the neo4j interface and get results in tables.   
--     Generally these queries are used when you want to return lists or get percentages for report things  
+- Generally these queries are used when you want to return lists or get percentages for report things  
   
 -----------------------------------------------------------------------
                     ######     ##    ##    ########     ##     ##    ########    ########  
