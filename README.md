@@ -114,6 +114,7 @@ T.o.C
 65. [Return top 10 users with most Derivative local admin rights](#65-return-top-10-users-with-most-derivative-local-admin-rights)
 66. [Find all users WITHOUT a path to DA](#66-find-all-users-without-a-path-to-da)
 67. [Find users that have never logged on AND their account is still active](#67-find-users-that-have-never-logged-on-and-their-account-is-still-active)
+68. [Find users with DCSync rights who are not members of DA](#68-find-users-with-dcsync-rights-who-are-not-members-of-da)  
   
 -----------------------------------------------------------------------
 
@@ -675,6 +676,14 @@ MATCH (n:User),(m:Group {name:"DOMAIN ADMINS@CONTOSO.LOCAL"}) WHERE NOT EXISTS (
 MATCH (n:User) WHERE n.lastlogontimestamp=-1.0 AND n.enabled=TRUE RETURN n.name ORDER BY n.name  
 ```
   
+### 68. Find users with DCSync rights who are not members of DA
+```
+MATCH (n1)-[:MemberOf|GetChanges*1..]->(u:Domain {name: "TESTLAB.LOCAL"}) WITH n1,u 
+MATCH (n1)-[:MemberOf|GetChangesAll*1..]->(u) WITH n1,u 
+MATCH p = (n1)-[:MemberOf|GetChanges|GetChangesAll*1..]->(u) WHERE NOT (n1)-[:MemberOf*1..]->(:Group {name:"DOMAIN ADMINS@TESTLAB.LOCAL"}) 
+RETURN p
+```
+
   
 ## References
 Reading materials / References::  
