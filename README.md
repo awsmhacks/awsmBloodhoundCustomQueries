@@ -114,7 +114,8 @@ T.o.C
 65. [Return top 10 users with most Derivative local admin rights](#65-return-top-10-users-with-most-derivative-local-admin-rights)
 66. [Find all users WITHOUT a path to DA](#66-find-all-users-without-a-path-to-da)
 67. [Find users that have never logged on AND their account is still active](#67-find-users-that-have-never-logged-on-and-their-account-is-still-active)
-68. [Find users with DCSync rights who are not members of DA](#68-find-users-with-dcsync-rights-who-are-not-members-of-da)  
+68. [Find users with DCSync rights who are not members of DA](#68-find-users-with-dcsync-rights-who-are-not-members-of-da) 
+69. [Show attack paths from X domain to Specific Domain](#69-show-attack-paths-from-x-domain-to-specific-domain)
   
 -----------------------------------------------------------------------
 
@@ -683,6 +684,16 @@ MATCH (n1)-[:MemberOf|GetChangesAll*1..]->(u) WITH n1,u
 MATCH p = (n1)-[:MemberOf|GetChanges|GetChangesAll*1..]->(u) WHERE NOT (n1)-[:MemberOf*1..]->(:Group {name:"DOMAIN ADMINS@TESTLAB.LOCAL"}) 
 RETURN p
 ```
+
+### 69. Show attack paths from X domain to Specific Domain
+```
+MATCH p=(n)-[r]->(m) WHERE NOT n.domain = m.domain RETURN p  
+```
+or specific domains  
+```
+MATCH p=(n {domain:"lab.local")-[r]->(m {domain:"test.local"}) RETURN p
+```
+
 
   
 ## References
