@@ -163,14 +163,12 @@ ORDER BY c DESC
 ### 6. Show all users that are administrative on at least one machine, ranked by the number of machines they are admin on.
 ```
 MATCH (u:User)
-WITH u
-OPTIONAL MATCH (u)-[r:AdminTo]->(c:Computer)
-WITH u,COUNT(c) as expAdmin
-OPTIONAL MATCH (u)-[r:MemberOf*1..]->(g:Group)-[r2:AdminTo]->(c:Computer)
-WHERE NOT (u)-[:AdminTo]->(c)
-WITH u,expAdmin,COUNT(DISTINCT(c)) as unrolledAdmin
-RETURN u.name,expAdmin,unrolledAdmin,expAdmin + unrolledAdmin as totalAdmin
-ORDER BY totalAdmin ASC
+OPTIONAL MATCH (u)-[:AdminTo]->(c1:Computer)
+OPTIONAL MATCH (u)-[:MemberOf*1..]->(:Group)-[:AdminTo]->(c2:Computer)
+WITH u, COLLECT(c1) + COLLECT(c2) AS tempVar
+UNWIND tempVar AS computers
+RETURN u.name AS UserName,COUNT(DISTINCT(computers)) AS AdminRightCount
+ORDER BY AdminRightCount DESC
 ```
 
 ### 7. This will return cross domain 'HasSession' relationships
