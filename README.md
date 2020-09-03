@@ -223,6 +223,26 @@ UNWIND tempVar AS comps
 RETURN g.name,COUNT(DISTINCT(comps)) AS compcount
 ORDER BY compcount DESC
 ```
+or
+```
+MATCH (g:Group)
+MATCH (g)-[:AdminTo]->(c:Computer)
+RETURN g.name,COUNT(c)
+ORDER BY COUNT(c) DESC
+```
+or
+```
+MATCH (g:group)-[:AdminTo]->(c:Computer)
+RETURN g.name,COUNT(c)
+ORDER BY COUNT(c) DESC
+```
+or
+```
+MATCH (g:Group)
+MATCH (g)-[:MemberOf*1..]->(:Group)-[:AdminTo]->(c:Computer)
+RETURN g.name,COUNT(c)
+ORDER BY COUNT(c) DESC
+```
 
 ### 12. List of unique users with a path (no "GetChanges" path) to a Group tagged as "highvalue"
 ```
