@@ -213,6 +213,16 @@ WITH g,expAdmin,COUNT(DISTINCT(c)) as unrolledAdmin
 RETURN g.name,expAdmin,unrolledAdmin, expAdmin + unrolledAdmin as totalAdmin
 ORDER BY totalAdmin DESC 
 ```
+or
+```
+MATCH (g:Group)
+OPTIONAL MATCH (g)-[:AdminTo]->(c1:Computer)
+OPTIONAL MATCH (g)-[:MemberOf*1..]->(:Group)-[:AdminTo]->(c2:Computer)
+WITH g,COLLECT(c1) + COLLECT(c2) AS tempVar
+UNWIND tempVar AS comps
+RETURN g.name,COUNT(DISTINCT(comps)) AS compcount
+ORDER BY compcount DESC
+```
 
 ### 12. List of unique users with a path (no "GetChanges" path) to a Group tagged as "highvalue"
 ```
