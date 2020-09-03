@@ -115,7 +115,8 @@ T.o.C
 66. [Find all users WITHOUT a path to DA](#66-find-all-users-without-a-path-to-da)
 67. [Find users that have never logged on AND their account is still active](#67-find-users-that-have-never-logged-on-and-their-account-is-still-active)
 68. [Find users with DCSync rights who are not members of DA](#68-find-users-with-dcsync-rights-who-are-not-members-of-da) 
-69. [Show attack paths from X domain to Specific Domain](#69-show-attack-paths-from-x-domain-to-specific-domain)
+69. [Show attack paths from X domain to Specific Domain](#69-show-attack-paths-from-x-domain-to-specific-domain)  
+70. [Find all computers that are NOT dc's](#70-find-all-computers-that-are-NOT-dcs)
   
 -----------------------------------------------------------------------
 
@@ -692,6 +693,22 @@ or specific domains
 MATCH p=(n {domain:"lab.local")-[r]->(m {domain:"test.local"}) RETURN p
 ```
 
+### 70. Find all computers that are NOT dc's
+```
+MATCH (dc:Computer)-[:MemberOf*1..]->(g:Group)
+WHERE g.name STARTS WITH('DOMAIN CONTROLLERS')
+WITH COLLECT(dc) as dcs
+MATCH (c:Computer) WHERE NOT c in dcs
+RETURN COUNT(c)
+```
+or using objectID  
+```
+MATCH (c1:Computer)-[:MemberOf*1..]->(g:Group)
+WHERE g.objectid ENDS WITH "-516"
+WITH COLLECT(c1) as dcs
+MATCH (c:Computer) WHERE NOT c in dcs
+RETURN COUNT(c)
+```
 
   
 ## References
